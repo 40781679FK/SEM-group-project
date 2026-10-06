@@ -16,7 +16,7 @@ Primary task
 
 ### Preconditions
 
-Database contains necessary information. All report types can be generated.
+Database contains necessary information. All different report types can be generated.
 
 ### Success End Condition
 
