@@ -20,40 +20,30 @@ Database contains necessary information.
 
 ### Success End Condition
 
-The number of people speaking each language is listed 
+The number of people speaking each language is listed largest to smallest. The percentage of the population is also listed.
 
 ### Failed End Condition
 
-*the state of the world if goal abandoned*
+The information is not displayed to the employee.
 
 ### Primary Actor
 
-*a role name for the primary actor, or description*
+Employee
 
 ### Trigger
 
-*the action upon the system that starts the use case, may be a time event*
+The organisation wants the number of people speaking each language listed largest to smallest with percentages attached.
 
 ## MAIN SUCCESS SCENARIO
 
-*put here the steps of the scenario from trigger to goal delivery, and any cleanup after*
-
-1. action description
+1. Organisation requests employee to get language population data.
+2. Employee request language population data from application.
+3. Data is displayed to employee.
 
 ## EXTENSIONS
 
-*put here the extensions, one at a time, each referring to the step of the main scenario*
-
-1. **Condition**: action of sub use case
-
 ## SUB-VARIATIONS
-
-*put here the sub-variations that will cause eventual branching in the scenario
-
-1. list of sub-variations
 
 ## SCHEDULE
 
-**DUE DATE**: *date or release of deployment*
-
-*any other schedule/staffing information you need*
+**DUE DATE**: *Code review 4*
