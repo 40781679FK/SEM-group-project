@@ -1,14 +1,14 @@
-# USE CASE: 1 Access Population Information from the Database
+# USE CASE: 1 Get Requested Report/Data from Pre-Defined List
 
 ## CHARACTERISTIC INFORMATION
 
 ### Goal in Context
 
-As a member of the organisation I want to access population counts from a specific record in the database.
+The organisation wants one of the reports from the list generated.
 
 ### Scope
 
-Organisation
+Organisation.
 
 ### Level
 
@@ -16,30 +16,30 @@ Primary task
 
 ### Preconditions
 
-Database contains population count information.
+Database contains necessary information. All report types can be generated.
 
 ### Success End Condition
 
-The user can access the values for the population of a: world, continent, region, country, district or city at will.
+A report/value matching the report type and report conditions is generated and displayed to the user.
 
 ### Failed End Condition
 
-No information is outputted to the user.
+The organisation/employee never gets the report/value they want.
 
 ### Primary Actor
 
-Organisation employee.
+Employee
 
 ### Trigger
 
-Employee needs to know a population number.
+The organisation needs the data from one of the listed reports.
 
 ## MAIN SUCCESS SCENARIO
 
-1. Organisation needs population number(s).
-2. Employee learns which population number is specifically needed.
-3. Employee requests specific population number from application.
-4. Employee presents population data to organisation.
+1. Organisation needs report data from database.
+2. Employee requests data with listed parameters
+3. The value(s) of the correct type is generated and shown to the employee.
+4. Employee reports value(s) to organisation.
 
 ## EXTENSIONS
 
@@ -51,4 +51,58 @@ None
 
 ## SCHEDULE
 
-**DUE DATE**: *Code Review 4*
+**DUE DATE**: *Code review 4*
+
+## RELATED INFORMATION
+
+*List of reports needed:*
+
+All the countries in the world organised by largest population to smallest.
+
+All the countries in a continent organised by largest population to smallest.
+
+All the countries in a region organised by largest population to smallest.
+
+The top N populated countries in the world where N is provided by the user.
+
+The top N populated countries in a continent where N is provided by the user.
+
+The top N populated countries in a region where N is provided by the user.
+
+All the cities in the world organised by largest population to smallest.
+
+All the cities in a continent organised by largest population to smallest.
+
+All the cities in a region organised by largest population to smallest.
+
+All the cities in a country organised by largest population to smallest.
+
+All the cities in a district organised by largest population to smallest.
+
+The top N populated cities in the world where N is provided by the user.
+
+The top N populated cities in a continent where N is provided by the user.
+
+The top N populated cities in a region where N is provided by the user.
+
+The top N populated cities in a country where N is provided by the user.
+
+The top N populated cities in a district where N is provided by the user.
+
+All the capital cities in the world organised by largest population to smallest.
+
+All the capital cities in a continent organised by largest population to smallest.
+
+All the capital cities in a region organised by largest to smallest.
+
+The top N populated capital cities in the world where N is provided by the user.
+
+The top N populated capital cities in a continent where N is provided by the user.
+
+The top N populated capital cities in a region where N is provided by the user.
+
+The population of people, people living in cities, and people not living in cities in each continent.
+
+The population of people, people living in cities, and people not living in cities in each region.
+
+The population of people, people living in cities, and people not living in cities in each country.
