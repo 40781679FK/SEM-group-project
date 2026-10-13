@@ -10,12 +10,12 @@ import java.sql.Statement;
  */
 public class App
 {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws InterruptedException {
         String url = "jdbc:mysql://db:3306/world?allowPublicKeyRetrieval=true&useSSL=false";
         String username = "root";
         String password = "example";
 
+        Thread.sleep(30000);
         try (Connection connection = DriverManager.getConnection(url, username, password))
         {
             System.out.println("Connected to MySQL successfully!");
