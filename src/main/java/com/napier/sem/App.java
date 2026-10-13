@@ -9,7 +9,7 @@ public class App
 {
     public static void main(String[] args)
     {
-        String url = "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false";
+        String url = "jdbc:mysql://db:3306/world?allowPublicKeyRetrieval=true&useSSL=false";
         String username = "root";
         String password = "example";
 
