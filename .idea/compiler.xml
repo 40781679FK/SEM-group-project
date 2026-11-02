@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="seMethods" />
         <module name="semCW" />
+        <module name="SEM-group-project" />
       </profile>
     </annotationProcessing>
   </component>
