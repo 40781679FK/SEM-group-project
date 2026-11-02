@@ -4,23 +4,63 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 
 /**
  *
  */
 public class App
 {
-    public static void main(String[] args) throws InterruptedException {
-        String url = "jdbc:mysql://db:3306/world?allowPublicKeyRetrieval=true&useSSL=false";
-        String username = "root";
-        String password = "example";
+    private Connection con;
 
-        Thread.sleep(30000);
-        try (Connection connection = DriverManager.getConnection(url, username, password))
-        {
-            System.out.println("Connected to MySQL successfully!");
+    public void connect(String location, int delay) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not load SQL driver");
+            System.exit(-1);
+        }
 
-            try (Statement statement = connection.createStatement())
+        int retries = 10;
+
+        for (int i = 0; i < retries; ++i) {
+            System.out.println("Connecting to database...");
+
+            try {
+                Thread.sleep(delay);
+
+                con = DriverManager.getConnection(
+                        "jdbc:mysql://" + location +
+                                "/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root",
+                        "example"
+                );
+
+                System.out.println("Successfully connected");
+                break;
+
+            } catch (SQLException sqle) {
+                System.out.println("Failed to connect to database attempt " + i);
+                System.out.println(sqle.getMessage());
+
+            } catch (InterruptedException ie) {
+                System.out.println("Thread interrupted");
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        App a = new App();
+
+        if (args.length < 1) {
+            a.connect("localhost:33060", 30000);
+        } else {
+            a.connect(args[0], Integer.parseInt(args[1]));
+        }
+
+        try (Statement statement = a.con.createStatement()) {
             {
                 System.out.println("\n1. All countries in the world");
                 try (ResultSet result = statement.executeQuery(
@@ -273,6 +313,16 @@ public class App
         {
             System.out.println("MySQL connection or report failed:");
             e.printStackTrace();
+        }
+    }
+
+    public int getCountryCount() throws SQLException {
+        try (Statement statement = con.createStatement();
+             ResultSet result = statement.executeQuery(
+                     "SELECT COUNT(*) FROM country")) {
+
+            result.next();
+            return result.getInt(1);
         }
     }
 }
