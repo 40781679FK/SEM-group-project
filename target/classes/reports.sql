@@ -158,37 +158,6 @@ WHERE country.Region = 'Caribbean'
 ORDER BY city.Population DESC
 LIMIT 3;
 
--- remaining 3 queries from list
-SELECT
-    country.Continent AS 'Continent',
-    SUM(country.Population) AS 'Total Population',
-    SUM(city.Population) AS 'Population Living in Cities',
-    SUM(country.Population) - SUM(city.Population) AS 'Population Not Living in Cities'
-FROM country
-         LEFT JOIN city ON country.Code = city.CountryCode
-GROUP BY country.Continent
-ORDER BY SUM(country.Population) DESC;
-
-SELECT
-    country.Region AS 'Region',
-    SUM(country.Population) AS 'Total Population',
-    SUM(city.Population) AS 'Population Living in Cities',
-    SUM(country.Population) - SUM(city.Population) AS 'Population Not Living in Cities'
-FROM country
-         LEFT JOIN city ON country.Code = city.CountryCode
-GROUP BY country.Region
-ORDER BY SUM(country.Population) DESC;
-
-SELECT
-    country.Name AS 'Country',
-    country.Population AS 'Total Population',
-    SUM(city.Population) AS 'Population Living in Cities',
-    country.Population - SUM(city.Population) AS 'Population Not Living in Cities'
-FROM country
-         LEFT JOIN city ON country.Code = city.CountryCode
-GROUP BY country.Code, country.Name, country.Population
-ORDER BY country.Population DESC;
-
 -- go back to w3 and check for relations
 -- all up and working
 -- see for filter later on and do it 38392

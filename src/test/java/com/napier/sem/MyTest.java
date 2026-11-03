@@ -106,4 +106,24 @@ class MyTest {
                 result
         );
     }
+
+    @Test
+    void testFormatDistribution() {
+        App app = new App();
+
+        assertEquals(
+                "Test | 1000 | 250 (25.00%) | 750 (75.00%)",
+                app.formatDistribution("Test", 1000, 250)
+        );
+    }
+
+    @Test
+    void testFormatDistributionWithZeroPopulation() {
+        App app = new App();
+
+        assertEquals(
+                "Empty | 0 | 0 (0.00%) | 0 (0.00%)",
+                app.formatDistribution("Empty", 0, 0)
+        );
+    }
 }
