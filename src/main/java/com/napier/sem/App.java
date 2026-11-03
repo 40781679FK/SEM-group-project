@@ -316,6 +316,12 @@ public class App
         }
     }
 
+    public String formatCountry(String code, String name, String continent,
+                                String region, int population, String capital) {
+        return code + " | " + name + " | " + continent + " | " +
+                region + " | " + population + " | " + capital;
+    }
+
     public int getCountryCount() throws SQLException {
         try (Statement statement = con.createStatement();
              ResultSet result = statement.executeQuery(

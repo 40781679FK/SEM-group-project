@@ -17,7 +17,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Unit Tests
-        run: mvn -Dtest=MyTest test
+        run: mvn -Dtest=com.napier.sem.MyTest test
 
   IntegrationTests:
     name: Integration Tests
@@ -36,7 +36,7 @@ jobs:
         run: |
           docker build -t database ./db
           docker run --name worlddb -dp 33060:3306 database
-          mvn -Dtest=AppIntegrationTest test
+          mvn -Dtest=com.napier.sem.AppIntegrationTest test
           docker stop worlddb
           docker rm worlddb
           docker image rm database
