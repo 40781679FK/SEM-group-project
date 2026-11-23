@@ -237,3 +237,25 @@ SELECT
     Population AS 'Population'
 FROM city
 WHERE Name = 'Edinburgh';
+
+-- Language population
+
+SELECT
+    countrylanguage.Language AS 'Language',
+    SUM(country.Population * countrylanguage.Percentage / 100) AS 'Number of Speakers',
+    ROUND(
+            SUM(country.Population * countrylanguage.Percentage / 100)
+                / (SELECT SUM(Population) FROM country) * 100,
+            2
+    ) AS 'Percentage of World Population'
+FROM countrylanguage
+         JOIN country ON countrylanguage.CountryCode = country.Code
+WHERE countrylanguage.Language IN (
+                                   'Chinese',
+                                   'English',
+                                   'Hindi',
+                                   'Spanish',
+                                   'Arabic'
+    )
+GROUP BY countrylanguage.Language
+ORDER BY SUM(country.Population * countrylanguage.Percentage / 100) DESC;
