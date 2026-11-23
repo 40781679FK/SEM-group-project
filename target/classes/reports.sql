@@ -192,3 +192,48 @@ ORDER BY country.Population DESC;
 -- go back to w3 and check for relations
 -- all up and working
 -- see for filter later on and do it 38392
+
+-- Population of whatever
+
+-- population of world
+SELECT
+    SUM(Population) AS 'World Population'
+FROM country;
+
+-- population of continent using asia
+SELECT
+    Continent AS 'Continent',
+    SUM(Population) AS 'Population'
+FROM country
+WHERE Continent = 'Asia'
+GROUP BY Continent;
+
+-- population of region using Carribean
+SELECT
+    Region AS 'Region',
+    SUM(Population) AS 'Population'
+FROM country
+WHERE Region = 'Caribbean'
+GROUP BY Region;
+
+-- population of country
+SELECT
+    Name AS 'Country',
+    Population AS 'Population'
+FROM country
+WHERE Name = 'Japan';
+
+-- population of district
+SELECT
+    District AS 'District',
+    SUM(Population) AS 'Population'
+FROM city
+WHERE District = 'Scotland'
+GROUP BY District;
+
+-- population of city
+SELECT
+    Name AS 'City',
+    Population AS 'Population'
+FROM city
+WHERE Name = 'Edinburgh';
