@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">semCW</a> &gt; <a href="index.source.html" class="el_package">com.napier.sem</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package com.napier.sem;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.Locale;
+
+/**
+ *
+ */
+<span class="fc" id="L14">public class App</span>
+{
+    private Connection con;
+
+    public void connect(String location, int delay) {
+        try {
+<span class="fc" id="L20">            Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span>
+<span class="nc" id="L21">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L22">            System.out.println(&quot;Could not load SQL driver&quot;);</span>
+<span class="nc" id="L23">            System.exit(-1);</span>
+<span class="fc" id="L24">        }</span>
+
+<span class="fc" id="L26">        int retries = 10;</span>
+
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        for (int i = 0; i &lt; retries; ++i) {</span>
+<span class="fc" id="L29">            System.out.println(&quot;Connecting to database...&quot;);</span>
+
+            try {
+<span class="fc" id="L32">                Thread.sleep(delay);</span>
+
+<span class="fc" id="L34">                con = DriverManager.getConnection(</span>
+                        &quot;jdbc:mysql://&quot; + location +
+                                &quot;/world?allowPublicKeyRetrieval=true&amp;useSSL=false&quot;,
+                        &quot;root&quot;,
+                        &quot;example&quot;
+                );
+
+<span class="fc" id="L41">                System.out.println(&quot;Successfully connected&quot;);</span>
+<span class="fc" id="L42">                break;</span>
+
+<span class="fc" id="L44">            } catch (SQLException sqle) {</span>
+<span class="fc" id="L45">                System.out.println(&quot;Failed to connect to database attempt &quot; + i);</span>
+<span class="fc" id="L46">                System.out.println(sqle.getMessage());</span>
+
+<span class="nc" id="L48">            } catch (InterruptedException ie) {</span>
+<span class="nc" id="L49">                System.out.println(&quot;Thread interrupted&quot;);</span>
+<span class="nc" id="L50">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L51">                break;</span>
+<span class="fc" id="L52">            }</span>
+        }
+<span class="fc" id="L54">    }</span>
+
+    public static void main(String[] args) {
+<span class="fc" id="L57">        App a = new App();</span>
+
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (args.length &lt; 1) {</span>
+<span class="nc" id="L60">            a.connect(&quot;localhost:33060&quot;, 30000);</span>
+        } else {
+<span class="fc" id="L62">            a.connect(args[0], Integer.parseInt(args[1]));</span>
+        }
+
+        try {
+            // ---------- Country reports (scope: world / continent / region, limit 0 = no limit) ----------
+<span class="fc" id="L67">            a.printCountryReport(&quot;1. All countries in the world&quot;, &quot;world&quot;, null, 0);</span>
+<span class="fc" id="L68">            a.printCountryReport(&quot;2. All countries in Asia&quot;, &quot;continent&quot;, &quot;Asia&quot;, 0);</span>
+<span class="fc" id="L69">            a.printCountryReport(&quot;3. All countries in the Caribbean&quot;, &quot;region&quot;, &quot;Caribbean&quot;, 0);</span>
+<span class="fc" id="L70">            a.printCountryReport(&quot;4. Top 5 countries in the world&quot;, &quot;world&quot;, null, 5);</span>
+<span class="fc" id="L71">            a.printCountryReport(&quot;5. Top 3 countries in Europe&quot;, &quot;continent&quot;, &quot;Europe&quot;, 3);</span>
+<span class="fc" id="L72">            a.printCountryReport(&quot;6. Top 3 countries in the Caribbean&quot;, &quot;region&quot;, &quot;Caribbean&quot;, 3);</span>
+
+            // ---------- City reports (scope: world / continent / region / country / district) ----------
+<span class="fc" id="L75">            a.printCityReport(&quot;7. All cities in the world&quot;, &quot;world&quot;, null, 0);</span>
+<span class="fc" id="L76">            a.printCityReport(&quot;8. All cities in Oceania&quot;, &quot;continent&quot;, &quot;Oceania&quot;, 0);</span>
+<span class="fc" id="L77">            a.printCityReport(&quot;9. All cities in the Caribbean&quot;, &quot;region&quot;, &quot;Caribbean&quot;, 0);</span>
+<span class="fc" id="L78">            a.printCityReport(&quot;10. All cities in Japan&quot;, &quot;country&quot;, &quot;Japan&quot;, 0);</span>
+<span class="fc" id="L79">            a.printCityReport(&quot;11. All cities in the district of Kabol&quot;, &quot;district&quot;, &quot;Kabol&quot;, 0);</span>
+<span class="fc" id="L80">            a.printCityReport(&quot;12. Top 5 cities in the world&quot;, &quot;world&quot;, null, 5);</span>
+<span class="fc" id="L81">            a.printCityReport(&quot;13. Top 3 cities in Africa&quot;, &quot;continent&quot;, &quot;Africa&quot;, 3);</span>
+<span class="fc" id="L82">            a.printCityReport(&quot;14. Top 3 cities in the Caribbean&quot;, &quot;region&quot;, &quot;Caribbean&quot;, 3);</span>
+<span class="fc" id="L83">            a.printCityReport(&quot;15. Top 3 cities in Japan&quot;, &quot;country&quot;, &quot;Japan&quot;, 3);</span>
+<span class="fc" id="L84">            a.printCityReport(&quot;16. Top 3 cities in Kabol&quot;, &quot;district&quot;, &quot;Kabol&quot;, 3);</span>
+
+            // ---------- Capital city reports (scope: world / continent / region) ----------
+<span class="fc" id="L87">            a.printCapitalReport(&quot;17. All capital cities in the world&quot;, &quot;world&quot;, null, 0);</span>
+<span class="fc" id="L88">            a.printCapitalReport(&quot;18. All capital cities in Europe&quot;, &quot;continent&quot;, &quot;Europe&quot;, 0);</span>
+<span class="fc" id="L89">            a.printCapitalReport(&quot;19. All capital cities in the Caribbean&quot;, &quot;region&quot;, &quot;Caribbean&quot;, 0);</span>
+<span class="fc" id="L90">            a.printCapitalReport(&quot;20. Top 5 capital cities in the world&quot;, &quot;world&quot;, null, 5);</span>
+<span class="fc" id="L91">            a.printCapitalReport(&quot;21. Top 3 capital cities in Asia&quot;, &quot;continent&quot;, &quot;Asia&quot;, 3);</span>
+<span class="fc" id="L92">            a.printCapitalReport(&quot;22. Top 3 capital cities in the Caribbean&quot;, &quot;region&quot;, &quot;Caribbean&quot;, 3);</span>
+
+            // ---------- Population distribution reports ----------
+<span class="fc" id="L95">            a.printPopulationDistribution(&quot;23. Population distribution by continent&quot;, &quot;continent&quot;);</span>
+<span class="fc" id="L96">            a.printPopulationDistribution(&quot;24. Population distribution by region&quot;, &quot;region&quot;);</span>
+<span class="fc" id="L97">            a.printPopulationDistribution(&quot;25. Population distribution by country&quot;, &quot;country&quot;);</span>
+        }
+<span class="nc" id="L99">        catch (Exception e)</span>
+        {
+<span class="nc" id="L101">            System.out.println(&quot;MySQL connection or report failed:&quot;);</span>
+<span class="nc" id="L102">            e.printStackTrace();</span>
+<span class="fc" id="L103">        }</span>
+<span class="fc" id="L104">    }</span>
+
+    public String formatCountry(String code, String name, String continent,
+                                String region, int population, String capital) {
+<span class="fc" id="L108">        return code + &quot; | &quot; + name + &quot; | &quot; + continent + &quot; | &quot; +</span>
+                region + &quot; | &quot; + population + &quot; | &quot; + capital;
+    }
+
+    public int getCountryCount() throws SQLException {
+<span class="fc" id="L113">        try (Statement statement = con.createStatement();</span>
+<span class="fc" id="L114">             ResultSet result = statement.executeQuery(</span>
+                     &quot;SELECT COUNT(*) FROM country&quot;)) {
+
+<span class="fc" id="L117">            result.next();</span>
+<span class="fc" id="L118">            return result.getInt(1);</span>
+        }
+    }
+
+    /**
+     * Builds the WHERE part of a report query for the chosen scope.
+     * Column names cannot be sent as ? placeholders, so the scope is checked
+     * against this fixed list and only a known piece of SQL is ever used.
+     * The value itself (e.g. 'Asia') is always sent as a ? placeholder.
+     */
+    private String whereClause(String scope) {
+<span class="pc bpc" id="L129" title="1 of 6 branches missed.">        switch (scope) {</span>
+            case &quot;world&quot;:
+<span class="fc" id="L131">                return &quot;&quot;;</span>
+            case &quot;continent&quot;:
+<span class="fc" id="L133">                return &quot;WHERE country.Continent = ? &quot;;</span>
+            case &quot;region&quot;:
+<span class="fc" id="L135">                return &quot;WHERE country.Region = ? &quot;;</span>
+            case &quot;country&quot;:
+<span class="fc" id="L137">                return &quot;WHERE country.Name = ? &quot;;</span>
+            case &quot;district&quot;:
+<span class="fc" id="L139">                return &quot;WHERE city.District = ? &quot;;</span>
+            default:
+<span class="nc" id="L141">                throw new IllegalArgumentException(&quot;Unknown report scope: &quot; + scope);</span>
+        }
+    }
+
+    /**
+     * Runs a report query. sqlStart is everything before the WHERE clause,
+     * sqlEnd is the ORDER BY part. A limit of 0 (or less) means &quot;no limit&quot;.
+     */
+    private ResultSet runReport(String sqlStart, String scope, String value, String sqlEnd, int limit)
+            throws SQLException {
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        String sql = sqlStart + whereClause(scope) + sqlEnd + (limit &gt; 0 ? &quot; LIMIT ?&quot; : &quot;&quot;);</span>
+<span class="fc" id="L152">        PreparedStatement statement = con.prepareStatement(sql);</span>
+<span class="fc" id="L153">        int parameter = 1;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (!scope.equals(&quot;world&quot;)) {</span>
+<span class="fc" id="L155">            statement.setString(parameter++, value);</span>
+        }
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (limit &gt; 0) {</span>
+<span class="fc" id="L158">            statement.setInt(parameter, limit);</span>
+        }
+<span class="fc" id="L160">        statement.closeOnCompletion(); // the statement closes itself when the ResultSet is closed</span>
+<span class="fc" id="L161">        return statement.executeQuery();</span>
+    }
+
+    /** Country report scope is world, continent or region. */
+    public void printCountryReport(String title, String scope, String value, int limit) throws SQLException {
+<span class="fc" id="L166">        System.out.println(&quot;\n&quot; + title);</span>
+<span class="fc" id="L167">        try (ResultSet result = runReport(</span>
+                &quot;SELECT country.Code, country.Name, country.Continent, country.Region, country.Population, city.Name AS Capital &quot; +
+                        &quot;FROM country LEFT JOIN city ON country.Capital = city.ID &quot;,
+                scope, value, &quot;ORDER BY country.Population DESC&quot;, limit))
+        {
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            while (result.next())</span>
+<span class="fc" id="L173">                System.out.println(formatCountry(result.getString(&quot;Code&quot;), result.getString(&quot;Name&quot;),</span>
+<span class="fc" id="L174">                        result.getString(&quot;Continent&quot;), result.getString(&quot;Region&quot;),</span>
+<span class="fc" id="L175">                        result.getInt(&quot;Population&quot;), result.getString(&quot;Capital&quot;)));</span>
+        }
+<span class="fc" id="L177">    }</span>
+
+    /** City report scope is world, continent, region, country or district. */
+    public void printCityReport(String title, String scope, String value, int limit) throws SQLException {
+<span class="fc" id="L181">        System.out.println(&quot;\n&quot; + title);</span>
+<span class="fc" id="L182">        try (ResultSet result = runReport(</span>
+                &quot;SELECT city.Name, country.Name AS Country, city.District, city.Population &quot; +
+                        &quot;FROM city JOIN country ON city.CountryCode = country.Code &quot;,
+                scope, value, &quot;ORDER BY city.Population DESC&quot;, limit))
+        {
+<span class="fc bfc" id="L187" title="All 2 branches covered.">            while (result.next())</span>
+<span class="fc" id="L188">                System.out.println(result.getString(&quot;Name&quot;) + &quot; | &quot; + result.getString(&quot;Country&quot;) + &quot; | &quot; +</span>
+<span class="fc" id="L189">                        result.getString(&quot;District&quot;) + &quot; | &quot; + result.getInt(&quot;Population&quot;));</span>
+        }
+<span class="fc" id="L191">    }</span>
+
+    /** Capital city report: scope is world, continent or region. */
+    public void printCapitalReport(String title, String scope, String value, int limit) throws SQLException {
+<span class="fc" id="L195">        System.out.println(&quot;\n&quot; + title);</span>
+<span class="fc" id="L196">        try (ResultSet result = runReport(</span>
+                &quot;SELECT city.Name, country.Name AS Country, city.Population &quot; +
+                        &quot;FROM country JOIN city ON country.Capital = city.ID &quot;,
+                scope, value, &quot;ORDER BY city.Population DESC&quot;, limit))
+        {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">            while (result.next())</span>
+<span class="fc" id="L202">                System.out.println(result.getString(&quot;Name&quot;) + &quot; | &quot; + result.getString(&quot;Country&quot;) + &quot; | &quot; +</span>
+<span class="fc" id="L203">                        result.getInt(&quot;Population&quot;));</span>
+        }
+<span class="fc" id="L205">    }</span>
+
+    /**
+     * Population distribution for each continent, region or country shows the total
+     * population, the population living in cities and the population not living in cities.
+     * City populations are totaled per country in a subquery first, so a countrys own
+     * population is never counted once per city.
+     */
+    public void printPopulationDistribution(String title, String level) throws SQLException {
+        String groupColumn;
+<span class="pc bpc" id="L215" title="1 of 4 branches missed.">        switch (level) {</span>
+            case &quot;continent&quot;:
+<span class="fc" id="L217">                groupColumn = &quot;country.Continent&quot;;</span>
+<span class="fc" id="L218">                break;</span>
+            case &quot;region&quot;:
+<span class="fc" id="L220">                groupColumn = &quot;country.Region&quot;;</span>
+<span class="fc" id="L221">                break;</span>
+            case &quot;country&quot;:
+<span class="fc" id="L223">                groupColumn = &quot;country.Name&quot;;</span>
+<span class="fc" id="L224">                break;</span>
+            default:
+<span class="nc" id="L226">                throw new IllegalArgumentException(&quot;Unknown distribution level: &quot; + level);</span>
+        }
+
+<span class="fc" id="L229">        System.out.println(&quot;\n&quot; + title);</span>
+<span class="fc" id="L230">        try (Statement statement = con.createStatement();</span>
+<span class="fc" id="L231">             ResultSet result = statement.executeQuery(</span>
+                     &quot;SELECT &quot; + groupColumn + &quot; AS Name, &quot; +
+                             &quot;SUM(country.Population) AS TotalPopulation, &quot; +
+                             &quot;SUM(IFNULL(cityTotals.CityPopulation, 0)) AS CityPopulation &quot; +
+                             &quot;FROM country LEFT JOIN &quot; +
+                             &quot;(SELECT CountryCode, SUM(Population) AS CityPopulation FROM city GROUP BY CountryCode) AS cityTotals &quot; +
+                             &quot;ON country.Code = cityTotals.CountryCode &quot; +
+                             &quot;GROUP BY &quot; + groupColumn + &quot; ORDER BY TotalPopulation DESC&quot;))
+        {
+<span class="fc bfc" id="L240" title="All 2 branches covered.">            while (result.next()) {</span>
+<span class="fc" id="L241">                long total = result.getLong(&quot;TotalPopulation&quot;);</span>
+<span class="fc" id="L242">                long inCities = result.getLong(&quot;CityPopulation&quot;);</span>
+<span class="fc" id="L243">                System.out.println(formatDistribution(result.getString(&quot;Name&quot;), total, inCities));</span>
+<span class="fc" id="L244">            }</span>
+        }
+<span class="fc" id="L246">    }</span>
+
+    /** Formats one distribution row: name , total , in cities (%) , not in cities (%). */
+    public String formatDistribution(String name, long total, long inCities) {
+<span class="fc" id="L250">        long notInCities = total - inCities;</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        double inCitiesPercent = total == 0 ? 0 : inCities * 100.0 / total;</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        double notInCitiesPercent = total == 0 ? 0 : notInCities * 100.0 / total;</span>
+<span class="fc" id="L253">        return name + &quot; | &quot; + total + &quot; | &quot; + inCities + &quot; (&quot; + String.format(Locale.ROOT, &quot;%.2f&quot;, inCitiesPercent) + &quot;%) | &quot; +</span>
+<span class="fc" id="L254">                notInCities + &quot; (&quot; + String.format(Locale.ROOT, &quot;%.2f&quot;, notInCitiesPercent) + &quot;%)&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
